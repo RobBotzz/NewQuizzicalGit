@@ -58,7 +58,6 @@ export default function Question(props) {
         <div>
             <p className="question"><div dangerouslySetInnerHTML={{__html: question}}/></p>
             <div className="answers">
-                <p>{JSON.stringify(answers[answers.length - 1])}</p>
                 {buttonsArr}
             </div>
         </div>

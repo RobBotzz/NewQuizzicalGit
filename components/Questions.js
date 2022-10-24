@@ -65,12 +65,20 @@ export default function Questions(props) {
         }
     }
 
+    function getScore() {
+        let counter = 0
+        for (let i = 0; i < score.length; i += 1) {
+            if (score[i].value)
+                counter += 1
+        }
+        return counter
+    }
+
     return (
         <div id="quizEl">
-                <p>{JSON.stringify(score)}</p>
                {questionArr}
                 <div id="resultDiv">
-                    {isFinished && <p id="resultScore">You scored XXX correct answers</p>}
+                    {isFinished && <p id="resultScore">You scored {getScore()}/{questions.length} correct answers</p>}
                     {questions.length !== 0 && <button id="checkButton" onClick={() => handleFinish()}>
                         {!isFinished ? "Check answers" : "Play again"}
                     </button>}

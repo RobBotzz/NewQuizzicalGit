@@ -7,7 +7,7 @@ export default function Questions(props) {
     const [isFinished, setIsFinished] = React.useState(false)
     
     const [restart, setRestart] = React.useState(false)
-    const [score, setScore] = React.useState([false, false, false, false])
+    const [score, setScore] = React.useState([])
     
     function handleScoreChange(question, value) {
         let questionId = -1
@@ -17,9 +17,12 @@ export default function Questions(props) {
             }
         }
         setScore(prevScore => {
-            let temp = prevScore
-            temp[questionId] = value
-            return temp
+            return prevScore.map((obj) => {
+                if (obj.id === questionId)
+                    return {id: obj.id, value: value}
+                else
+                    return obj
+            })
         })
     }
     
@@ -28,6 +31,20 @@ export default function Questions(props) {
         .then((data) => data.json())
         .then((data) => setQuestions(data.results))
     }, [restart])
+
+    React.useEffect(() => {
+        setIsFinished(false)
+    }, [questions])
+
+    React.useEffect(() => {
+        setScore(() => {
+            let temp = []
+            for (let i = 0; i < questions.length; i += 1) {
+                temp.push({id: i, value: false})
+            }
+            return temp
+        })
+    }, [questions])
     
     const questionArr = questions.map((question) => {
         const temp = [...question.incorrect_answers, question.correct_answer]
@@ -44,22 +61,19 @@ export default function Questions(props) {
         if (!isFinished) {
             setIsFinished(true)
         } else {
-            setIsFinished(false)
             setRestart(prev => !prev)
-            setScore([false, false, false, false])
         }
     }
-    
-    console.log(questions)
 
     return (
         <div id="quizEl">
+                <p>{JSON.stringify(score)}</p>
                {questionArr}
                 <div id="resultDiv">
                     {isFinished && <p id="resultScore">You scored XXX correct answers</p>}
-                    <button id="checkButton" onClick={() => handleFinish()}>
+                    {questions.length !== 0 && <button id="checkButton" onClick={() => handleFinish()}>
                         {!isFinished ? "Check answers" : "Play again"}
-                    </button>
+                    </button>}
                 </div>
                 <svg className="yellowBlob" width="126" height="131" viewBox="0 0 126 131" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd" clipRule="evenodd" d="M63.4095 71.3947C35.1213 40.8508 -2.68211 11.7816 1.17274 -29.6933C5.43941 -75.599 39.854 -115.359 82.4191 -133.133C122.797 -149.994 170.035 -140.256 205.822 -115.149C235.947 -94.0141 236.823 -53.8756 246.141 -18.271C256.17 20.0508 282.521 60.8106 260.501 93.7792C237.538 128.159 188.991 133.432 147.931 128.768C112.318 124.723 87.7505 97.6768 63.4095 71.3947Z" fill="#FFFAD1"/>

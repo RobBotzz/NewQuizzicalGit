@@ -12,7 +12,7 @@ export default function Question(props) {
                 id: i,
                 ans: answers[i],
                 isSelected: false,
-                isCorrect: i < answers.length - 1 ? false : true
+                isCorrect: i >= answers.length - 1
             })
         }
         temp = shuffle(temp)
@@ -28,18 +28,13 @@ export default function Question(props) {
                     {id: prevAnswer.id, ans: prevAnswer.ans, isCorrect: prevAnswer.isCorrect, isSelected: false}
                 )
             })
-            let value = false
-            for (let i = 0; i < objAnswers.length; i+= 1) {
-                if (objAnswers[i].isSelected)
-                    value = objAnswers[i].isCorrect
-            }
-            handleScoreChange(question, value)     
+            handleScoreChange(question, ans === answers[answers.length - 1])     
         }
     }
     
     const buttonsArr = objAnswers.map((answer) => {
         return <Answer 
-                    key={answer.ans} 
+                    key={answer.id} 
                     answer={answer.ans} 
                     isSelected={answer.isSelected} 
                     isCorrect={answer.isCorrect}
@@ -63,6 +58,7 @@ export default function Question(props) {
         <div>
             <p className="question"><div dangerouslySetInnerHTML={{__html: question}}/></p>
             <div className="answers">
+                <p>{JSON.stringify(answers[answers.length - 1])}</p>
                 {buttonsArr}
             </div>
         </div>

@@ -27,7 +27,7 @@ export default function Questions(props) {
     }
     
     React.useEffect(() => {
-        fetch("https://opentdb.com/api.php?amount=5")
+        fetch(props.triviaDB)
         .then((data) => data.json())
         .then((data) => setQuestions(data.results))
     }, [restart])

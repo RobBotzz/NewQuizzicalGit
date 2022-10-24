@@ -418,7 +418,26 @@ function App() {
         hasStarted = _React$useState2[0],
         setHasStarted = _React$useState2[1];
 
-    return hasStarted ? _react2.default.createElement(_Questions2.default, { setHasStarted: setHasStarted }) : _react2.default.createElement(_Start2.default, { setHasStarted: setHasStarted });
+    var _React$useState3 = _react2.default.useState("https://opentdb.com/api.php?amount=5"),
+        _React$useState4 = _slicedToArray(_React$useState3, 2),
+        triviaDB = _React$useState4[0],
+        setTriviaDB = _React$useState4[1];
+
+    var _React$useState5 = _react2.default.useState(false),
+        _React$useState6 = _slicedToArray(_React$useState5, 2),
+        isHard = _React$useState6[0],
+        setIsHard = _React$useState6[1];
+
+    function setGame(amount, difficulty, category) {
+        setTriviaDB("https://opentdb.com/api.php?amount=" + amount + "&difficulty=" + difficulty);
+    }
+
+    function setHard() {
+        setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=hard");
+        setIsHard(true);
+    }
+
+    return hasStarted ? _react2.default.createElement(_Questions2.default, { triviaDB: triviaDB, setHasStarted: setHasStarted }) : _react2.default.createElement(_Start2.default, { isHard: isHard, setHard: setHard, setHasStarted: setHasStarted });
 }
 
 /***/ }),
@@ -690,7 +709,7 @@ function Questions(props) {
     }
 
     _react2.default.useEffect(function () {
-        fetch("https://opentdb.com/api.php?amount=5").then(function (data) {
+        fetch(props.triviaDB).then(function (data) {
             return data.json();
         }).then(function (data) {
             return setQuestions(data.results);
@@ -797,6 +816,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Start(props) {
 
+    var style = {
+        "color": props.isHard ? "black" : "rgb(255, 51, 51)",
+        "backgroundColor": props.isHard ? "rgb(255, 51, 51)" : "transparent"
+    };
+
     return _react2.default.createElement(
         "div",
         { id: "startEl" },
@@ -812,10 +836,18 @@ function Start(props) {
         ),
         _react2.default.createElement(
             "button",
-            { onClick: function onClick() {
+            { id: "startButton", onClick: function onClick() {
                     return props.setHasStarted(true);
                 } },
             "Start quiz"
+        ),
+        _react2.default.createElement(
+            "button",
+            { id: "hardButton", style: style, onClick: function onClick() {
+                    return props.setHard();
+                } },
+            props.isHard ? "Active" : "Activate",
+            " Hardmode"
         ),
         _react2.default.createElement(
             "svg",

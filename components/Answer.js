@@ -38,7 +38,7 @@ export default function Answer(props) {
     
     return (
         <div className="answer" style={styles} onClick={() => handleClick(answer)}>
-            {answer}
+            <div dangerouslySetInnerHTML={{__html: answer}}/>
         </div>
     )
 }

@@ -12,7 +12,7 @@ export default function Question(props) {
                 id: i,
                 ans: answers[i],
                 isSelected: false,
-                isCorrect: i >= answers.length - 1
+                isCorrect: i < answers.length - 1 ? false : true
             })
         }
         temp = shuffle(temp)

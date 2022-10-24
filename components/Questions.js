@@ -27,7 +27,7 @@ export default function Questions(props) {
     }
     
     React.useEffect(() => {
-        fetch("https://opentdb.com/api.php?amount=5&category=30&difficulty=easy&type=multiple")
+        fetch("https://opentdb.com/api.php?amount=5")
         .then((data) => data.json())
         .then((data) => setQuestions(data.results))
     }, [restart])

@@ -530,7 +530,7 @@ function Answer(props) {
         { className: "answer", style: styles, onClick: function onClick() {
                 return handleClick(answer);
             } },
-        answer
+        _react2.default.createElement("div", { dangerouslySetInnerHTML: { __html: answer } })
     );
 }
 
@@ -589,17 +589,13 @@ function Question(props) {
                     return prevAnswer.ans === ans ? { id: prevAnswer.id, ans: prevAnswer.ans, isCorrect: prevAnswer.isCorrect, isSelected: true } : { id: prevAnswer.id, ans: prevAnswer.ans, isCorrect: prevAnswer.isCorrect, isSelected: false };
                 });
             });
-            var value = false;
-            for (var i = 0; i < objAnswers.length; i += 1) {
-                if (objAnswers[i].isSelected) value = objAnswers[i].isCorrect;
-            }
-            handleScoreChange(question, value);
+            handleScoreChange(question, ans === answers[answers.length - 1]);
         }
     }
 
     var buttonsArr = objAnswers.map(function (answer) {
         return _react2.default.createElement(_Answer2.default, {
-            key: answer.ans,
+            key: answer.id,
             answer: answer.ans,
             isSelected: answer.isSelected,
             isCorrect: answer.isCorrect,
@@ -622,11 +618,7 @@ function Question(props) {
     return _react2.default.createElement(
         "div",
         null,
-        _react2.default.createElement(
-            "p",
-            { className: "question" },
-            _react2.default.createElement("div", { dangerouslySetInnerHTML: { __html: question } })
-        ),
+        _react2.default.createElement("div", { className: "question", dangerouslySetInnerHTML: { __html: question } }),
         _react2.default.createElement(
             "div",
             { className: "answers" },
@@ -678,7 +670,7 @@ function Questions(props) {
         restart = _React$useState6[0],
         setRestart = _React$useState6[1];
 
-    var _React$useState7 = _react2.default.useState([false, false, false, false]),
+    var _React$useState7 = _react2.default.useState([]),
         _React$useState8 = _slicedToArray(_React$useState7, 2),
         score = _React$useState8[0],
         setScore = _React$useState8[1];
@@ -691,19 +683,33 @@ function Questions(props) {
             }
         }
         setScore(function (prevScore) {
-            var temp = prevScore;
-            temp[questionId] = value;
-            return temp;
+            return prevScore.map(function (obj) {
+                if (obj.id === questionId) return { id: obj.id, value: value };else return obj;
+            });
         });
     }
 
     _react2.default.useEffect(function () {
-        fetch("https://opentdb.com/api.php?amount=4").then(function (data) {
+        fetch("https://opentdb.com/api.php?amount=5").then(function (data) {
             return data.json();
         }).then(function (data) {
             return setQuestions(data.results);
         });
     }, [restart]);
+
+    _react2.default.useEffect(function () {
+        setIsFinished(false);
+    }, [questions]);
+
+    _react2.default.useEffect(function () {
+        setScore(function () {
+            var temp = [];
+            for (var i = 0; i < questions.length; i += 1) {
+                temp.push({ id: i, value: false });
+            }
+            return temp;
+        });
+    }, [questions]);
 
     var questionArr = questions.map(function (question) {
         var temp = [].concat(_toConsumableArray(question.incorrect_answers), [question.correct_answer]);
@@ -720,15 +726,19 @@ function Questions(props) {
         if (!isFinished) {
             setIsFinished(true);
         } else {
-            setIsFinished(false);
             setRestart(function (prev) {
                 return !prev;
             });
-            setScore([false, false, false, false]);
         }
     }
 
-    console.log(questions);
+    function getScore() {
+        var counter = 0;
+        for (var i = 0; i < score.length; i += 1) {
+            if (score[i].value) counter += 1;
+        }
+        return counter;
+    }
 
     return _react2.default.createElement(
         "div",
@@ -740,9 +750,13 @@ function Questions(props) {
             isFinished && _react2.default.createElement(
                 "p",
                 { id: "resultScore" },
-                "You scored XXX correct answers"
+                "You scored ",
+                getScore(),
+                "/",
+                questions.length,
+                " correct answers"
             ),
-            _react2.default.createElement(
+            questions.length !== 0 && _react2.default.createElement(
                 "button",
                 { id: "checkButton", onClick: function onClick() {
                         return handleFinish();

@@ -56,7 +56,7 @@ export default function Question(props) {
     
     return (
         <div>
-            <p className="question"><div dangerouslySetInnerHTML={{__html: question}}/></p>
+            <div className="question" dangerouslySetInnerHTML={{__html: question}}/>
             <div className="answers">
                 {buttonsArr}
             </div>

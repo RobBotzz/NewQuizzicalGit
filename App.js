@@ -6,20 +6,15 @@ export default function App() {
     
     const [hasStarted, setHasStarted] = React.useState(false)
     const [triviaDB, setTriviaDB] = React.useState("https://opentdb.com/api.php?amount=5")
-    const [isHard, setIsHard] = React.useState(false)
+    const [mode, setMode] = React.useState("medium")
     
-    function setGame(amount, difficulty, category) {
-        setTriviaDB("https://opentdb.com/api.php?amount=" + amount + "&difficulty=" + difficulty)
-    }
-
-    function setHard() {
-        setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=hard")
-        setIsHard(true)
-    }
+    React.useEffect(() => {
+        setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=" + mode)
+    }, [mode])
 
     return (
         hasStarted ? 
-        <Questions triviaDB={triviaDB} setHasStarted={setHasStarted}/> : 
-        <Start isHard={isHard} setHard={setHard} setHasStarted={setHasStarted} />
+        <Questions triviaDB={triviaDB} setHasStarted={setHasStarted} difficulty={mode}/> : 
+        <Start setDifficulty={setMode} difficulty={mode} setHasStarted={setHasStarted} />
     )
 }

@@ -76,6 +76,7 @@ export default function Questions(props) {
 
     return (
         <div id="quizEl">
+                {questions.length !== 0 && <h2 id="modeTitle">{props.difficulty[0].toUpperCase() + props.difficulty.substring(1)}</h2>}
                {questionArr}
                 <div id="resultDiv">
                     {isFinished && <p id="resultScore">You scored {getScore()}/{questions.length} correct answers</p>}

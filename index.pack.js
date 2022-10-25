@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -74,9 +74,9 @@
 /* WEBPACK VAR INJECTION */(function(process) {
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(14);
+  module.exports = __webpack_require__(15);
 } else {
-  module.exports = __webpack_require__(13);
+  module.exports = __webpack_require__(14);
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -376,9 +376,9 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 /* WEBPACK VAR INJECTION */(function(process) {
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(18);
+  module.exports = __webpack_require__(19);
 } else {
-  module.exports = __webpack_require__(17);
+  module.exports = __webpack_require__(18);
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -402,11 +402,11 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Start = __webpack_require__(9);
+var _Start = __webpack_require__(10);
 
 var _Start2 = _interopRequireDefault(_Start);
 
-var _Questions = __webpack_require__(8);
+var _Questions = __webpack_require__(9);
 
 var _Questions2 = _interopRequireDefault(_Questions);
 
@@ -423,21 +423,16 @@ function App() {
         triviaDB = _React$useState4[0],
         setTriviaDB = _React$useState4[1];
 
-    var _React$useState5 = _react2.default.useState(false),
+    var _React$useState5 = _react2.default.useState("medium"),
         _React$useState6 = _slicedToArray(_React$useState5, 2),
-        isHard = _React$useState6[0],
-        setIsHard = _React$useState6[1];
+        mode = _React$useState6[0],
+        setMode = _React$useState6[1];
 
-    function setGame(amount, difficulty, category) {
-        setTriviaDB("https://opentdb.com/api.php?amount=" + amount + "&difficulty=" + difficulty);
-    }
+    _react2.default.useEffect(function () {
+        setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=" + mode);
+    }, [mode]);
 
-    function setHard() {
-        setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=hard");
-        setIsHard(true);
-    }
-
-    return hasStarted ? _react2.default.createElement(_Questions2.default, { triviaDB: triviaDB, setHasStarted: setHasStarted }) : _react2.default.createElement(_Start2.default, { isHard: isHard, setHard: setHard, setHasStarted: setHasStarted });
+    return hasStarted ? _react2.default.createElement(_Questions2.default, { triviaDB: triviaDB, setHasStarted: setHasStarted, difficulty: mode }) : _react2.default.createElement(_Start2.default, { setDifficulty: setMode, difficulty: mode, setHasStarted: setHasStarted });
 }
 
 /***/ }),
@@ -479,9 +474,9 @@ if (process.env.NODE_ENV === 'production') {
   // DCE check should happen before ReactDOM bundle executes so that
   // DevTools can report bad minification during injection.
   checkDCE();
-  module.exports = __webpack_require__(12);
+  module.exports = __webpack_require__(13);
 } else {
-  module.exports = __webpack_require__(11);
+  module.exports = __webpack_require__(12);
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
@@ -555,6 +550,55 @@ function Answer(props) {
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = Mode;
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function Mode(props) {
+    var mode = props.mode,
+        setDifficulty = props.setDifficulty,
+        difficulty = props.difficulty;
+
+
+    var isSelected = mode === difficulty;
+    var color = isSelected ? "white" : "black";
+    var backgroundColor = "gray";
+    if (difficulty === "easy") {
+        backgroundColor = isSelected ? "darkgreen" : "green";
+    } else if (difficulty === "medium") {
+        backgroundColor = isSelected ? "darkorange" : "orange";
+    } else if (difficulty === "hard") {
+        backgroundColor = isSelected ? "darkred" : "red";
+    }
+    var style = {
+        "color": color,
+        "backgroundColor": backgroundColor,
+        "fontWeight": isSelected ? "bold" : "normal"
+    };
+
+    return _react2.default.createElement(
+        "div",
+        { className: "mode", style: style, onClick: function onClick() {
+                return setDifficulty(mode);
+            } },
+        mode
+    );
+}
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -647,7 +691,7 @@ function Question(props) {
 }
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -665,7 +709,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Question = __webpack_require__(7);
+var _Question = __webpack_require__(8);
 
 var _Question2 = _interopRequireDefault(_Question);
 
@@ -762,6 +806,11 @@ function Questions(props) {
     return _react2.default.createElement(
         "div",
         { id: "quizEl" },
+        questions.length !== 0 && _react2.default.createElement(
+            "h2",
+            { id: "modeTitle" },
+            props.difficulty[0].toUpperCase() + props.difficulty.substring(1)
+        ),
         questionArr,
         _react2.default.createElement(
             "div",
@@ -797,7 +846,7 @@ function Questions(props) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -812,14 +861,13 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _Mode = __webpack_require__(7);
+
+var _Mode2 = _interopRequireDefault(_Mode);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function Start(props) {
-
-    var style = {
-        "color": props.isHard ? "black" : "rgb(255, 51, 51)",
-        "backgroundColor": props.isHard ? "rgb(255, 51, 51)" : "transparent"
-    };
 
     return _react2.default.createElement(
         "div",
@@ -842,12 +890,11 @@ function Start(props) {
             "Start quiz"
         ),
         _react2.default.createElement(
-            "button",
-            { id: "hardButton", style: style, onClick: function onClick() {
-                    return props.setHard();
-                } },
-            props.isHard ? "Active" : "Activate",
-            " Hardmode"
+            "div",
+            { id: "modes" },
+            _react2.default.createElement(_Mode2.default, { mode: "easy", setDifficulty: props.setDifficulty, difficulty: props.difficulty }),
+            _react2.default.createElement(_Mode2.default, { mode: "medium", setDifficulty: props.setDifficulty, difficulty: props.difficulty }),
+            _react2.default.createElement(_Mode2.default, { mode: "hard", setDifficulty: props.setDifficulty, difficulty: props.difficulty })
         ),
         _react2.default.createElement(
             "svg",
@@ -863,7 +910,7 @@ function Start(props) {
 }
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -886,7 +933,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById("root"));
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -908,7 +955,7 @@ if (process.env.NODE_ENV !== "production") {
 var React = __webpack_require__(0);
 var _assign = __webpack_require__(2);
 var Scheduler = __webpack_require__(3);
-var tracing = __webpack_require__(19);
+var tracing = __webpack_require__(20);
 
 var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
@@ -27156,7 +27203,7 @@ exports.version = ReactVersion;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -27460,7 +27507,7 @@ exports.unstable_renderSubtreeIntoContainer=function(a,b,c,d){if(!rk(c))throw Er
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29801,7 +29848,7 @@ exports.version = ReactVersion;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -29831,7 +29878,7 @@ exports.useLayoutEffect=function(a,b){return S().useLayoutEffect(a,b)};exports.u
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30186,7 +30233,7 @@ exports.unstable_wrap = unstable_wrap;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30202,7 +30249,7 @@ var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unst
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30856,7 +30903,7 @@ exports.unstable_wrapCallback = unstable_wrapCallback;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30883,16 +30930,16 @@ exports.unstable_wrapCallback=function(a){var b=P;return function(){var c=P;P=b;
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = __webpack_require__(16);
+  module.exports = __webpack_require__(17);
 } else {
-  module.exports = __webpack_require__(15);
+  module.exports = __webpack_require__(16);
 }
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))

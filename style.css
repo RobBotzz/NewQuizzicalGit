@@ -51,6 +51,7 @@ body {
     height: 50px;
     border-radius: 10px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .mode {
@@ -65,6 +66,14 @@ body {
     font-size: 40px;
     color: #293264;
     text-decoration: overline;
+}
+
+.textInput {
+    border: 3px solid #293264;
+    border-radius: 10px;
+    margin-top: 50px;
+    padding: 10px;
+    font-weight: bold;
 }
 
 .blueBlob {

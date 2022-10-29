@@ -418,22 +418,33 @@ function App() {
         hasStarted = _React$useState2[0],
         setHasStarted = _React$useState2[1];
 
-    var _React$useState3 = _react2.default.useState("https://the-trivia-api.com/api/questions?limit=5&tags=disney"),
+    var _React$useState3 = _react2.default.useState("https://the-trivia-api.com/api/questions?limit=5&difficulty=medium"),
         _React$useState4 = _slicedToArray(_React$useState3, 2),
         triviaDB = _React$useState4[0],
         setTriviaDB = _React$useState4[1];
 
-    var _React$useState5 = _react2.default.useState("medium"),
+    var _React$useState5 = _react2.default.useState("mixed"),
         _React$useState6 = _slicedToArray(_React$useState5, 2),
         mode = _React$useState6[0],
         setMode = _React$useState6[1];
 
+    var _React$useState7 = _react2.default.useState(""),
+        _React$useState8 = _slicedToArray(_React$useState7, 2),
+        category = _React$useState8[0],
+        setCategory = _React$useState8[1];
+
     _react2.default.useEffect(function () {
         //setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=" + mode)
-        setTriviaDB("https://the-trivia-api.com/api/questions?limit=5&tags=disney");
-    }, [mode]);
+        var modeString = "";
+        var categoryString = "";
+        if (mode !== "mixed") modeString = "&difficulty=" + mode;
+        if (category !== "") categoryString = "&tags=" + category;
+        setTriviaDB("https://the-trivia-api.com/api/questions?limit=5" + modeString + categoryString);
+    }, [mode, category]);
 
-    return hasStarted ? _react2.default.createElement(_Questions2.default, { triviaDB: triviaDB, setHasStarted: setHasStarted, difficulty: mode }) : _react2.default.createElement(_Start2.default, { setDifficulty: setMode, difficulty: mode, setHasStarted: setHasStarted });
+    _react2.default.useEffect(function () {}, [category]);
+
+    return hasStarted ? _react2.default.createElement(_Questions2.default, { triviaDB: triviaDB, setHasStarted: setHasStarted, difficulty: mode }) : _react2.default.createElement(_Start2.default, { setDifficulty: setMode, difficulty: mode, setCategory: setCategory, category: category, setHasStarted: setHasStarted });
 }
 
 /***/ }),
@@ -870,6 +881,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Start(props) {
 
+    var regex = new RegExp('[a-z]');
+
+    function handleChange(input) {
+        var text = input.toLowerCase();
+        var valid = true;
+        for (var i = 0; i < text.length; i += 1) {
+            if (regex.test(text.charAt(i)) === false) valid = false;
+        }
+        if (valid) props.setCategory(text);
+    }
+
     return _react2.default.createElement(
         "div",
         { id: "startEl" },
@@ -897,6 +919,9 @@ function Start(props) {
             _react2.default.createElement(_Mode2.default, { mode: "medium", setDifficulty: props.setDifficulty, difficulty: props.difficulty }),
             _react2.default.createElement(_Mode2.default, { mode: "hard", setDifficulty: props.setDifficulty, difficulty: props.difficulty })
         ),
+        _react2.default.createElement("input", { className: "textInput", type: "text", placeholder: "category", value: props.category, onChange: function onChange(event) {
+                return handleChange(event.target.value);
+            } }),
         _react2.default.createElement(
             "svg",
             { className: "blueBlob", width: "148", height: "118", viewBox: "0 0 148 118", fill: "none", xmlns: "http://www.w3.org/2000/svg" },

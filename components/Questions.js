@@ -29,7 +29,7 @@ export default function Questions(props) {
     React.useEffect(() => {
         fetch(props.triviaDB)
         .then((data) => data.json())
-        .then((data) => setQuestions(data.results))
+        .then((data) => setQuestions(data))
     }, [restart])
 
     React.useEffect(() => {
@@ -47,7 +47,7 @@ export default function Questions(props) {
     }, [questions])
     
     const questionArr = questions.map((question) => {
-        const temp = [...question.incorrect_answers, question.correct_answer]
+        const temp = [...question.incorrectAnswers, question.correctAnswer]
         return <Question 
                     key={question.question} 
                     question={question.question} 

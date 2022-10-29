@@ -418,7 +418,7 @@ function App() {
         hasStarted = _React$useState2[0],
         setHasStarted = _React$useState2[1];
 
-    var _React$useState3 = _react2.default.useState("https://opentdb.com/api.php?amount=5"),
+    var _React$useState3 = _react2.default.useState("https://the-trivia-api.com/api/questions?limit=5&tags=disney"),
         _React$useState4 = _slicedToArray(_React$useState3, 2),
         triviaDB = _React$useState4[0],
         setTriviaDB = _React$useState4[1];
@@ -429,7 +429,8 @@ function App() {
         setMode = _React$useState6[1];
 
     _react2.default.useEffect(function () {
-        setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=" + mode);
+        //setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=" + mode)
+        setTriviaDB("https://the-trivia-api.com/api/questions?limit=5&tags=disney");
     }, [mode]);
 
     return hasStarted ? _react2.default.createElement(_Questions2.default, { triviaDB: triviaDB, setHasStarted: setHasStarted, difficulty: mode }) : _react2.default.createElement(_Start2.default, { setDifficulty: setMode, difficulty: mode, setHasStarted: setHasStarted });
@@ -756,7 +757,7 @@ function Questions(props) {
         fetch(props.triviaDB).then(function (data) {
             return data.json();
         }).then(function (data) {
-            return setQuestions(data.results);
+            return setQuestions(data);
         });
     }, [restart]);
 
@@ -775,7 +776,7 @@ function Questions(props) {
     }, [questions]);
 
     var questionArr = questions.map(function (question) {
-        var temp = [].concat(_toConsumableArray(question.incorrect_answers), [question.correct_answer]);
+        var temp = [].concat(_toConsumableArray(question.incorrectAnswers), [question.correctAnswer]);
         return _react2.default.createElement(_Question2.default, {
             key: question.question,
             question: question.question,

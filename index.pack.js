@@ -433,8 +433,12 @@ function App() {
         category = _React$useState8[0],
         setCategory = _React$useState8[1];
 
+    var _React$useState9 = _react2.default.useState(false),
+        _React$useState10 = _slicedToArray(_React$useState9, 2),
+        error = _React$useState10[0],
+        setError = _React$useState10[1];
+
     _react2.default.useEffect(function () {
-        //setTriviaDB("https://opentdb.com/api.php?amount=5&difficulty=" + mode)
         var modeString = "";
         var categoryString = "";
         if (mode !== "mixed") modeString = "&difficulty=" + mode;
@@ -442,9 +446,7 @@ function App() {
         setTriviaDB("https://the-trivia-api.com/api/questions?limit=5" + modeString + categoryString);
     }, [mode, category]);
 
-    _react2.default.useEffect(function () {}, [category]);
-
-    return hasStarted ? _react2.default.createElement(_Questions2.default, { triviaDB: triviaDB, setHasStarted: setHasStarted, difficulty: mode }) : _react2.default.createElement(_Start2.default, { setDifficulty: setMode, difficulty: mode, setCategory: setCategory, category: category, setHasStarted: setHasStarted });
+    return hasStarted ? _react2.default.createElement(_Questions2.default, { triviaDB: triviaDB, setHasStarted: setHasStarted, difficulty: mode, setError: setError }) : _react2.default.createElement(_Start2.default, { setDifficulty: setMode, difficulty: mode, setCategory: setCategory, category: category, setHasStarted: setHasStarted, error: error });
 }
 
 /***/ }),
@@ -587,12 +589,14 @@ function Mode(props) {
     var isSelected = mode === difficulty;
     var color = isSelected ? "white" : "black";
     var backgroundColor = "gray";
-    if (difficulty === "easy") {
-        backgroundColor = isSelected ? "darkgreen" : "green";
+    if (difficulty === "mixed") {
+        backgroundColor = isSelected ? "gray" : "lightgray";
+    } else if (difficulty === "easy") {
+        backgroundColor = isSelected ? "#00AA00" : "#86D277";
     } else if (difficulty === "medium") {
         backgroundColor = isSelected ? "darkorange" : "orange";
     } else if (difficulty === "hard") {
-        backgroundColor = isSelected ? "darkred" : "red";
+        backgroundColor = isSelected ? "darkred" : "#FF6666";
     }
     var style = {
         "color": color,
@@ -768,7 +772,13 @@ function Questions(props) {
         fetch(props.triviaDB).then(function (data) {
             return data.json();
         }).then(function (data) {
-            return setQuestions(data);
+            setQuestions(data);
+            return data;
+        }).then(function (data) {
+            if (data.length === 0) {
+                props.setHasStarted(false);
+                props.setError(true);
+            }
         });
     }, [restart]);
 
@@ -915,9 +925,20 @@ function Start(props) {
         _react2.default.createElement(
             "div",
             { id: "modes" },
+            _react2.default.createElement(_Mode2.default, { mode: "mixed", setDifficulty: props.setDifficulty, difficulty: props.difficulty }),
             _react2.default.createElement(_Mode2.default, { mode: "easy", setDifficulty: props.setDifficulty, difficulty: props.difficulty }),
             _react2.default.createElement(_Mode2.default, { mode: "medium", setDifficulty: props.setDifficulty, difficulty: props.difficulty }),
             _react2.default.createElement(_Mode2.default, { mode: "hard", setDifficulty: props.setDifficulty, difficulty: props.difficulty })
+        ),
+        props.error && _react2.default.createElement(
+            "p",
+            { id: "errorText" },
+            _react2.default.createElement(
+                "b",
+                null,
+                "Error"
+            ),
+            ": Too specific!"
         ),
         _react2.default.createElement("input", { className: "textInput", type: "text", placeholder: "category", value: props.category, onChange: function onChange(event) {
                 return handleChange(event.target.value);

@@ -29,7 +29,17 @@ export default function Questions(props) {
     React.useEffect(() => {
         fetch(props.triviaDB)
         .then((data) => data.json())
-        .then((data) => setQuestions(data))
+        .then((data) => {
+            setQuestions(data)
+            return data
+        })
+        .then(data => {
+            if (data.length === 0) {
+                props.setHasStarted(false)
+                props.setError(true)
+            }
+        })
+
     }, [restart])
 
     React.useEffect(() => {

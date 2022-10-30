@@ -7,12 +7,14 @@ export default function Mode(props) {
     const isSelected = mode === difficulty
     const color = isSelected ? "white" : "black"
     let backgroundColor = "gray"
-    if (difficulty === "easy") {
-        backgroundColor = isSelected ? "darkgreen" : "green"
+    if (difficulty === "mixed") {
+        backgroundColor = isSelected ? "gray" : "lightgray"
+    } else if (difficulty === "easy") {
+        backgroundColor = isSelected ? "#00AA00" : "#86D277"
     } else if (difficulty === "medium") {
         backgroundColor = isSelected ? "darkorange" : "orange"
     } else if (difficulty === "hard") {
-        backgroundColor = isSelected ? "darkred" : "red"
+        backgroundColor = isSelected ? "darkred" : "#FF6666"
     }
     const style = {
         "color": color,

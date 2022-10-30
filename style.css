@@ -46,6 +46,7 @@ body {
 
 #modes {
     margin-top: 30px;
+    margin-bottom: 50px;
     display: flex;
     width: 350px;
     height: 50px;
@@ -62,16 +63,17 @@ body {
     font-weight: bold;
 }
 
-#modeTitle {
-    font-size: 40px;
-    color: #293264;
-    text-decoration: overline;
+#startEl > #errorText {
+    color: red;
+    letter-spacing: 2px;
+    font-size: 14px;
+    max-width: 210px;
+    margin-bottom: 5px;
 }
 
 .textInput {
     border: 3px solid #293264;
     border-radius: 10px;
-    margin-top: 50px;
     padding: 10px;
     font-weight: bold;
 }
@@ -94,6 +96,12 @@ body {
     padding: 20px 50px;
     max-width: 900px;
     margin-top: 20px;
+}
+
+#modeTitle {
+    font-size: 40px;
+    color: #293264;
+    text-decoration: overline;
 }
 
 .answers {
